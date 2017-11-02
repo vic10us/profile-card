@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>profile-card demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../profile-card.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        a:not(:hover) {
+          text-decoration: none;
+        }
+        paper-button {
+          color: #fff;
+          font-weight: 700;
+          background-color: #4285f4;
+          padding: 4px 12px 4px 12px;
+          margin-left: 0;
+          margin-top: 10px;
+          font-size: 13px;
+          border: 1px solid rgb(47, 91, 183);
+          text-transform: none;
+        }
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic profile-card demo left popout with initials (no profile image url)</h3>
+      <demo-snippet>
+        <template>
+          <profile-card popout-direction="left" profile='{"name":"Neo Doe","email":"ndoe@blueorredpill.com"}'>
+            <span slot="disclaimer">This account is managed by ACME Toys identity.</span>
+            <a href="#">More info</a>
+            <paper-button primary>My Account</paper-button>
+          </profile-card>
+        </template>
+      </demo-snippet>
+      <h3>Basic profile-card demo right popout with profile image</h3>
+      <demo-snippet>
+        <template>
+          <profile-card popout-direction="right" profile='{"name":"Neo Doe","email":"ndoe@blueorredpill.com","image":"./blank-profile-picture-973460_960_720.png"}'>
+            <span slot="disclaimer">This account is managed by ACME Toys identity.</span>
+            <a href="#">More info</a>
+            <paper-button primary>My Account</paper-button>
+          </profile-card>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
