@@ -1,0 +1,207 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../profile-icon/profile-icon.html">
+
+<dom-module id="profile-card">
+    <template>
+        <style is="custom-style">
+            :host{
+                display: inline-block;
+                --profile-card-icon-size0: var(--profile-card-icon-size, 32px);
+                --profile-color0: #fff;
+                --profile-background-color0: #000000;
+                --profile-card-header-color0: var(--profile-card-header-color, #FEF9DB);
+                --profile-card-action-button-color0: var(--profile-card-action-button-color, rgb(102,102,102));
+                --profile-card-action-button-border-color0: var(--profile-card-action-button-border-color, rgb(198,198,198));
+                --profile-card-action-button-background-color0: var(--profile-card-action-button-background-color, #F9F9F9);
+                --profile-card-action-button-focus-color0: var(--profile-card-action-button-focus-color, #fff);
+                --arrow-box-common: {
+                    bottom: 100%;
+                    border: solid transparent;
+                    content: " ";
+                    height: 0;
+                    width: 0;
+                    position: absolute;
+                    pointer-events: none;
+                    border-color: rgba(255, 255, 255, 0);
+                    border-bottom-color: var(--profile-card-header-color0);
+                    border-width: 8.5px;
+                    margin-left: -8.5px;
+                }
+            }
+            #alignedDialog {
+                width: 300px;
+                margin: 0;
+            }
+            .arrow-up {
+                position: fixed;
+                display: block;
+                top: 0;
+                left: 0;
+                width: 0; 
+                height: 0; 
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 5px solid black;
+            }
+            .arrow_box {
+                margin-top: 14px !important;
+                border-radius: 2px;
+                position: relative;
+                background: #fff;
+            }
+            .arrow_box.left:after {
+                @apply --arrow-box-common;
+                left: 14px;
+            }
+            .arrow_box.right:after {
+                @apply --arrow-box-common;
+                right: 10px;
+            }
+            .profile-container {
+                display: grid;
+                grid-template-columns: 96px 1fr;
+                grid-gap: 20px;
+                font-size: 13px;
+            }
+            .profile-container .profile-image {
+                grid-column: 1;
+            }
+            .card-header {
+                margin: 0;
+                font-size: 11px;
+                padding: 10px 20px 10px 20px;
+                background-color: var(--profile-card-header-color0);
+            }
+            .card-footer {
+                margin: 0;
+                padding: 10px;
+                grid-column-start: 1;
+                grid-column-end: -1;
+                margin-top: 20px;
+                background-color: #F5F5F5;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+            .card-footer paper-button {
+                grid-column: 2;
+                color: var(--profile-card-action-button-color0);
+                background-color: var(--profile-card-action-button-background-color0);
+                padding: 5px;
+                margin: 3px;
+                cursor: default;
+                text-transform: none;
+                border: 1px solid var(--profile-card-action-button-border-color0);
+                --paper-button-raised-keyboard-focus: {
+                    background-color: var(--profile-card-action-button-focus-color0) !important;
+                    color: white !important;
+                };
+            }
+            .card-footer paper-button:hover {
+              background-color: var(--profile-card-action-button-focus-color0);
+            }
+            .profile-name {
+                font-weight: 700;
+            }
+            .profile-email {
+                font-weight: 400;
+                color: rgb(102,102,102);
+            }
+            profile-icon {
+              position: relative; 
+              border-radius: 50%;
+              box-shadow: 1px 1px 3px rgba(102,102,102,0.5);
+            }
+            .icon-button-container {
+              position: relative; 
+              border-radius: 50%; 
+              padding: 5px;
+            }
+            .profile-container a {
+              text-decoration: none !important;
+            }
+            .profile-container profile-icon {
+              height: 96px;
+            }
+            .extra-content {
+              margin: 6px 0 6px 0;
+              /* padding-top: 5px; */
+            }
+
+        </style>
+
+        <div class="icon-button-container" on-tap="open">
+          <profile-icon id="profileIcon" username="[[profile.name]]" profile-image="[[profile.image]]" size="32px"></profile-icon>
+          <paper-ripple></paper-ripple>
+        </div>
+
+        <paper-dialog class$="arrow_box [[popoutDirection]]" on-iron-overlay-closed="_onClosed" id="alignedDialog" no-overlap horizontal-align$="[[popoutDirection]]" vertical-align="top">
+            <div class="card-header">
+                <slot name="disclaimer">
+                    This account is managed by ACME identity.
+                </slot>
+            </div>
+            <div class="profile-container">
+                <profile-icon username="[[profile.name]]" profile-image="[[profile.image]]" size="96px"></profile-icon>
+                <div>
+                    <div class="profile-name">[[profile.name]]</div>
+                    <div class="profile-email">[[profile.email]]</div>
+                    <slot class="extra-content"></slot>
+                </div>
+            </div>
+            <div class="card-footer">
+                <paper-button primary class="logout-button" on-tap="logout">Sign out</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+    
+      <script>
+          Polymer({
+            is: 'profile-card',
+            properties: {
+                opened: {
+                    type: Boolean,
+                    value: false,
+                    readonly: true,
+                    notify: true
+                },
+                profile: {
+                    type: Object,
+                    value: function() {
+                        return {
+                            name: '',
+                            email: '',
+                            link: '',
+                            image: ''
+                        };
+                    }
+                },
+                popoutDirection: {
+                  type: String,
+                  value: 'right'
+                }
+            },
+            observers: [ ],
+            ready: function () {},
+            attached: function () {
+                this.$.alignedDialog.positionTarget = this.$.profileIcon;
+            },
+            detached: function () {},
+            open: function(e,f) {
+                this.$.alignedDialog.opened = !!!this.opened;
+                this.opened = !!!this.opened;
+            },
+            _onClosed: function(e) {
+                this.opened = false;
+            },
+            logout: function() {
+                this.dispatchEvent(new CustomEvent('logout', {detail: {userEvent: true}}));
+            }
+          }); 
+      </script>
+</dom-module>
