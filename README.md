@@ -6,7 +6,7 @@ Google like profile card dialog using vic10us/card-icon.
 
 <!--
 ```
-<custom-element-demo>
+<custom-element-demo height="400px">
   <template>
     <link rel="import" href="profile-card.html">
     <profile-card popout-direction="left" profile='{"name":"Neo Doe","email":"ndoe@blueorredpill.com"}'>
